@@ -52,7 +52,7 @@ class Blog extends Component {
 
         return (
             <div>
-                <section className="Posts">
+                <section className="Posts">Î
                     {posts}
                 </section>
                 <section>
