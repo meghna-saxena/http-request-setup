@@ -35,7 +35,6 @@ class Blog extends Component {
 
     postSelectedHandler = (id) => {
         this.setState({ selectedPostId: id });
-
     }
 
     render() {
@@ -46,13 +45,13 @@ class Blog extends Component {
                     key={post.id}
                     title={post.title}
                     author={post.author}
-                    clicked={() => this.postSelectedHandler(post.id)} />;
+                    clicked={() => this.postSelectedHandler(post.id)} />
             });
         }
 
         return (
             <div>
-                <section className="Posts">Î
+                <section className="Posts">
                     {posts}
                 </section>
                 <section>
