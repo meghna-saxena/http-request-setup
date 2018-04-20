@@ -23,5 +23,10 @@ axios.interceptors.response.use(response => {
     return Promise.reject(error)
 });
 
+// Setting a default global configuration for axios:
+axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com'
+axios.defaults.headers.common['Authorisation'] = 'AUTH TOKEN';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 ReactDOM.render(<App />, document.getElementById('root'));
 
