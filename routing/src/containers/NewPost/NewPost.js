@@ -9,7 +9,7 @@ class NewPost extends Component {
         content: '',
         author: 'Meggie'
     }
-
+    
     postPostHandler = () => {
         const post = {
             title: this.state.title,
