@@ -19,3 +19,47 @@ fetch(<url>)
 Axios can make coding simpler by packaging the request code. 
 There are axios interceptors for handling http ajax request and responses globally.
 Although fetch is more convenient but it also requires the usage of an extra polyfill which you of course can do (it's actually included automatically by create-react-app). However, axios is more broadly known option.
+
+
+### Fake server data
+Using https://jsonplaceholder.typicode.com/ to get array of dummy posts
+
+
+## Workflow
+- In blog component, render dynamically generated lists of posts fetched from server
+
+
+Note: Ideal place for http request
+componentDidMount() is ideal for causing side-effects. State shouldnt be updated there, since it triggers re-render. However, we would still pdate state here, once http req gets some new data cause we want to update the page. So here it is a wanted behavior.  
+
+- Using axios get('url') method inside componentDidMount(). In axios.get(), the first arg is url, optional second arg for configuring request
+- Get req happens asynchronously
+- Axios therefore use promises, a default js object introduced with ES6.
+- So axios use promises, and get() returns a promise, so we can change .then() on it.
+- .then() is a method which takes func as a input and this func gets executed once promise resolves, i.e the data from the server is present.
+- .then(response => console.log(response));
+
+
+Note:
+
+### Async/await
+Instead of using promises like
+```
+ componentDidMount() {
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+        .then(response => {
+            console.log(response);
+        })
+    }
+```
+
+replace by:
+
+```
+asyn componentDidMount() {
+     const data = await axios.get('https://jsonplaceholder.typicode.com/posts')
+}
+```
+
+
+## Rendering fecthed data
