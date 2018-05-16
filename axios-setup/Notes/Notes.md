@@ -188,3 +188,19 @@ Wouldn't it be better to have an onClick listener on the Post which calls an upp
 
 
 ## Handling errors locally
+- Axios use promises, so not only we have .then() method, but also .catch() method
+- Set inital state with property error: false, if the axios doesnt runs properly inside .catch() method update the state
+
+```
+ .catch(error => {
+                // console.log(error);
+                this.setState({ error: true })
+ }
+ ```
+
+ then render something on screen, like:
+ ```
+ if (this.state.error) {
+     //code
+ }
+ ```
