@@ -62,7 +62,7 @@ asyn componentDidMount() {
 ```
 
 
-## Rendering fecthed data
+## Rendering fetched data
 - Initialise state and set `state = {posts:[]}`
 - Update state by calling setState inside axios .then() block - `this.setState({posts: reponse.data})`
 - If we call setState outside, the data wouldnt be fetched yet since axios runs async to application
@@ -72,4 +72,48 @@ asyn componentDidMount() {
 const posts = this.state.posts.map(post => {
             return <Post key={post.id} title={post.title} />;
         });
+```
+
+- Using async/await:
+You can also create this method using the ES8 Async/Await syntax. Going forward this will replace promises for the most part.
+
+```
+async componentDidMount() {
+ const response = await axios.get('http://jsonplaceholder.typicode.com/posts');
+ this.setState({posts: response.data});
+ }
+```
+
+It won't run setState until the axios.get funtion returns.
+
+
+- Note:
+In componentDidMount,state shouldn't be updated. However, we are fetching data and setState here:
+we're calling setState() here once the data returned from the Http request. It's correct because a Http request is a side effect and these should be done in componentDidMount. Note that we don't call setState directly in componentDidMount. We call it in the then() block which will be executed once the data is there, not directly when the component mounts.
+
+Still, it will cause a re-render but here, that's of course intended, we want to output our newly fetched data. We only want to avoid calling setState in componentDidMount() because we don't want to trigger unintended re-renders.
+
+It won't cause an infinite loop because componentDidMount() is only executed once. So all it can possibly cause is one extra render cycle.
+
+
+## Transforming fetched data
+- For real-world app, you send some query param to backend to restrict the maount of data to be fetched.   
+- Otherwise use slice() method to restrict the amount of posts to be fetched.
+- For transforming data, let's say we want to add author property to posts.
+- We map thru posts, and for every single post we return an object, distribute the old post by spread operator and add the new author property
+
+```
+componentDidMount() {
+        axios.get('https://jsonplaceholder.typicode.com/posts')
+            .then(response => {
+                const posts = response.data.slice(0, 4);
+                const updatedPosts = posts.map(post => {
+                    return {
+                        ...post,
+                        author: 'Meggie'
+                    };
+                })
+                this.setState({ posts: updatedPosts })
+            });
+    }
 ```
