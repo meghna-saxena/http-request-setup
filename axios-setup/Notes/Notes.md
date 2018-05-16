@@ -184,3 +184,7 @@ Wouldn't it be better to have an onClick listener on the Post which calls an upp
 
 
 ## Sending a delete request
+- Used axios.delete() method and send the url with specific id to delete the post
+
+
+## Handling errors locally
