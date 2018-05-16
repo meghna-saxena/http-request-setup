@@ -177,3 +177,10 @@ However, when clicking on any of them, we call a second GET action to retrieve t
 Wouldn't it be better to have an onClick listener on the Post which calls an upper level function that updates the FullPost with the already known data instead of making a second (and redundant) call? Or is there any specific reason why makes mandatory the need of calling this second HTTP GET?
 
 - - What if a user navigates directly to the details. Therefore it makes sense to only get the json for the specific one. It is the general API call that should not return so much data
+
+
+## POSTing data to the server
+- Made an axios.post() request in New Post component
+
+
+## Sending a delete request
