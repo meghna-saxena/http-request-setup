@@ -204,3 +204,87 @@ Wouldn't it be better to have an onClick listener on the Post which calls an upp
      //code
  }
  ```
+
+
+ ## Adding interceptors to execute code globally
+ - For executing some code globally, no matter which http request you send from which component, you want to do something when request is sent and/or response is returned
+ - Axios interceptors are used. These are func defined globally which will be executed for every req leaving your app & every reponse returning into it
+ - Especially useful for setting some common header. Eg: Authorization headers, or log reponses or to handle error globally.
+
+ For doing it -
+ - Go to index.js which is global file where App is mounted on the DOM
+ - import axios 
+ - - all axios imports share same configuration
+ - - that's why we use axios here and access interceptors object. So this will not only be share in this file but all the files of project. So it will affect all req send from anywhere.
+
+ axios.interceptors.use() // to register new interceptor
+
+ - The interceptor take func as input which receives config or request
+
+```
+ axios.interceptors.use(request => {
+     console.log(request);
+     //Edit req config
+     return request
+ })
+ ```
+ - In console we can see the request configuration, the headers which were added.
+ - Always return request inside interceptor func, otherwise you're blocking the request
+
+ - We can also pass second func besides request config func - which is a func handling errors
+
+ ```
+ axios.interceptors.request.use(request => {
+    console.log(request);
+    //edit request config
+    return request;
+}, error => { 
+    console.log(error);
+    return Promise.reject(error);
+});
+
+```
+
+ - this error block runs when there's trobule in sending req due to network connectivity problem.
+ - Also return Promise.reject(error); so that we forward it to request as wrote in component where it can be handled with catch method.
+ - Promise.reject() rejects the promise (=> "throws an error") and hence allows us to simulate an error or pass it on (i.e. if you already got an error from some other source).
+
+- Similarly there's reponse interceptor
+
+```
+axios.interceptors.response.use(response => {
+    console.log(response);
+    //edit response config
+    return response;
+}, error => {
+    console.log(error);
+    return Promise.reject(error);
+});
+```
+
+## Removing interceptors
+
+Simply store the reference to the interceptor in a variable and call eject  with that reference as an argument, to remove it (more info: https://github.com/axios/axios#interceptors):
+
+```
+var myInterceptor = axios.interceptors.request.use(function () {/*...*/});
+axios.interceptors.request.eject(myInterceptor);
+```
+
+## Setting a default global configuration for axios
+- If url you're sending requests is always the same, the starting point of url is always the same   
+- Use axios.defaults.baseURL in index.js and append the rest part of url 
+
+`axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com';`
+- Not just defaults baseURL, you can also config globally common headers or specific headers
+
+```
+axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
+axios.defaults.headers.post['Content-Type'] = 'apllication/json';
+```
+
+## Creating & using axios instances
+- If you want to use baseURL for certain parts and for other parts a diff url, similar case for headers - use axios instances in such cases.
+- Make an axios.js file
+- use `axios.create()` method to make instance of axios, a copy of axios object
+- we can create multiple instances  
