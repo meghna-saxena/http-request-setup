@@ -138,3 +138,42 @@ Note:
 
 `let post = <p style={{ textAlign: 'center' }}></p>;`
 Because the first pair (the outer pair) just tells JSX "some dynamic content is coming". Now here, I want to define inline-styles - which is simply a JS object passed to the style prop. Hence the dynamic content here is a JS object => the second pair of brackets (the inner one).
+
+
+
+## Fetching data on update (without creating infinte loops)
+- 2 kinds of component lifecycle hooks - while mounting and while updating
+- Component is present, now data should be fetched once receive a new prop id
+- Then ideal place for causing side-effects is - componentDidUpdate()
+- One problem - if we update state there - we update the component again and therefore enter infinte loop
+- Dont update state - triggers re-render
+
+## Workflow
+
+- Inside NewPost component, import axios
+- Create componentDidUpdate() and make http request
+- Not the .get('url') has to target only one single post by the id
+
+```
+ componentDidUpdate() {
+        if (this.props.id) {
+            if (!this.state.loadedPost || this.state.loadedPost && this.state.loadedPost.id !== this.props.id) {
+                axios.get('https://jsonplaceholder.typicode.com/posts/' + this.props.id)
+                    .then(response => {
+                        this.setState({ loadedPost: response.data });
+                    });
+            }
+        }
+    }
+```
+
+Use condition check for setState ohterwise you'll enter infinite loops
+
+
+- Why do we need the second HTTP call with specific id?
+When we get the initial set of (200) posts we already get the full set of details of each of them.
+However, when clicking on any of them, we call a second GET action to retrieve that specific Post but, the result contains exactly the same data as the initial one.
+
+Wouldn't it be better to have an onClick listener on the Post which calls an upper level function that updates the FullPost with the already known data instead of making a second (and redundant) call? Or is there any specific reason why makes mandatory the need of calling this second HTTP GET?
+
+- - What if a user navigates directly to the details. Therefore it makes sense to only get the json for the specific one. It is the general API call that should not return so much data
