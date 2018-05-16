@@ -94,6 +94,7 @@ we're calling setState() here once the data returned from the Http request. It's
 Still, it will cause a re-render but here, that's of course intended, we want to output our newly fetched data. We only want to avoid calling setState in componentDidMount() because we don't want to trigger unintended re-renders.
 
 It won't cause an infinite loop because componentDidMount() is only executed once. So all it can possibly cause is one extra render cycle.
+What's actually discouraged is that you immediately call setState()  in componentDidMount() . It'll trigger an instant re-render process. It's fine to use it in some callback/ async code (as we do it in the course). It's fine because it then doesn't run instantly.
 
 
 ## Transforming fetched data
@@ -117,3 +118,23 @@ componentDidMount() {
             });
     }
 ```
+
+## Making a post selectable
+- Make an onclick reference on Post component. Pass the id of the post to the handler.
+
+```
+<Post clicked={() => this.postSelectedHandler(post.id)} />
+```
+- We need to pass an argument here - with just this.postSelectedHandler, that's not possible, because we're not calling the method here. You could add bind(argument) at the end but that syntax can also be hard to understand, hence used the more common "wrap the to-be-executed function call in another, anonymous function" syntax.
+- Set a initial selectedPostId on state as null
+- Update the state inside the handler and set selectedPostId: id 
+- Pass the selectedPostId to NewPost component as props
+- In a class-based component (created via the class keyword), write this.props because props is a property of the object (and not received as part of a function).
+- Put a condition in NewPost comp, that if id is present show a div block containing the single post you just clicked.
+
+
+Note:
+- Using inline style, why double curly brackets?
+
+`let post = <p style={{ textAlign: 'center' }}></p>;`
+Because the first pair (the outer pair) just tells JSX "some dynamic content is coming". Now here, I want to define inline-styles - which is simply a JS object passed to the style prop. Hence the dynamic content here is a JS object => the second pair of brackets (the inner one).
