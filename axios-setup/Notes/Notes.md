@@ -63,3 +63,13 @@ asyn componentDidMount() {
 
 
 ## Rendering fecthed data
+- Initialise state and set `state = {posts:[]}`
+- Update state by calling setState inside axios .then() block - `this.setState({posts: reponse.data})`
+- If we call setState outside, the data wouldnt be fetched yet since axios runs async to application
+- Now render the array of posts by creating a constant, then mapping thru array of posts, which takes up single post and  returning Post component with its title
+
+```
+const posts = this.state.posts.map(post => {
+            return <Post key={post.id} title={post.title} />;
+        });
+```
